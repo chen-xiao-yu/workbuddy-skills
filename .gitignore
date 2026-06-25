@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+Thumbs.db
+*.bak
+*.log
+workbuddy.db
+workbuddy.db.bak
+candidates.json
+.venv/
+venv/
+.idea/
+.vscode/
