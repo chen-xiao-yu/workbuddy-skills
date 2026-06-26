@@ -2,9 +2,9 @@
 """
 WorkBuddy workspace migration script.
 
-Migrates all sessions from one workspace directory to another, syncing all four
-storage layers: workspace files, JSONL conversation records, workbuddy.db metadata,
-sessions.json mapping, and workspaces table.
+Migrates all sessions from one workspace directory to another, syncing four
+storage layers: workspace files, JSONL conversation records, workbuddy.db
+metadata, sessions.json mapping, and workspaces table.
 
 Usage:
     python migrate.py <old_dir> <new_dir> [--no-copy] [--dry-run]
@@ -13,11 +13,40 @@ Arguments:
     old_dir     Source workspace path (e.g. C:\\Users\\User\\WorkBuddy\\project)
     new_dir     Target workspace path (e.g. D:\\work\\migrated)
     --no-copy   Skip file copy step (useful when files already moved manually)
-    --dry-run   Preview changes without making them
+    --dry-run   Preview changes without making changes
 
 Examples:
     python migrate.py "C:\\Users\\User\\WorkBuddy\\old" "D:\\work\\new"
     python migrate.py "C:\\Users\\User\\WorkBuddy\\old" "D:\\work\\new" --no-copy
+
+IMPORTANT — What this script does NOT do:
+-----------------------------------------
+This script rewrites the `cwd` field in every JSONL record (so the session
+shows up in the new workspace's UI), but it does NOT rewrite the absolute
+`file_path` arguments embedded in Write/Edit/MultiEdit tool calls.
+
+Consequence: after migration, if you continue an existing conversation and
+ask the AI to "edit foo.py", the AI will look up the historical file_path
+(which still points at the OLD workspace) and edit the file there. The
+copy of foo.py in the NEW workspace becomes a dead file that nobody touches.
+
+This is fine for the original use case (recovering sessions that disappeared
+after a workspace rename, where you just want to read old conversations).
+But if you intend to KEEP WORKING on the project after migration, the
+recommended workflow is:
+
+    1. Run migrate.py to bring sessions + files into the new workspace
+    2. Start a FRESH session in the new workspace
+    3. Paste key conclusions / architecture decisions from the old session
+       as context into the new session
+    4. All subsequent file operations will use the new cwd naturally
+
+Rewriting file_path inside JSONL records is possible (the data is there),
+but is deliberately not implemented because:
+  - Deciding which paths to rewrite is non-trivial (some paths may point
+    outside the workspace, to system directories or other workspaces)
+  - URL-encoded paths in artifact-index add encoding-corruption risk
+  - The "start a fresh session" workflow sidesteps the issue entirely
 """
 
 import os
