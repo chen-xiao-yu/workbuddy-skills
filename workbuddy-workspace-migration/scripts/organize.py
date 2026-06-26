@@ -299,6 +299,32 @@ def move_session(session_id, src_workspace, dst_workspace, user_id=None, dry_run
 
     # file-history and artifact-index don't need migration — they are keyed
     # by session_id only, no path reference. Leave them in place.
+    #
+    # NOTE on artifacts / files written by the session:
+    # -----------------------------------------------
+    # This script deliberately does NOT move the actual files that the session
+    # wrote to disk (those referenced by Write/Edit tool calls via absolute
+    # file_path), nor does it rewrite those file_path references inside the
+    # JSONL records. This is a conscious trade-off:
+    #
+    #   - After moving, the conversation still renders correctly (absolute
+    #     paths still point to existing files in the old workspace).
+    #   - Continuing the conversation works: AI reads/writes the old paths
+    #     directly, so edits to old files still take effect.
+    #   - The only quirk: new files created after the move go to the new
+    #     workspace (because cwd changed), while old files stay in place.
+    #     The session effectively spans two directories.
+    #
+    # If you later want to consolidate everything into the new workspace
+    # (e.g. for an entire project), the recommended workflow is:
+    #   1. Run this script to move the session
+    #   2. Manually copy/move the project files from old workspace to new
+    #   3. Continue chatting — AI will pick up files at their new location
+    #
+    # Implementing automatic file migration + file_path rewriting is tracked
+    # as a future enhancement. The main concerns are:
+    #   - Determining which files belong to the session (vs. shared with others)
+    #   - URL-encoded paths in artifact-index (risk of encoding corruption)
     return moved
 
 
