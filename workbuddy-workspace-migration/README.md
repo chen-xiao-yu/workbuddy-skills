@@ -10,17 +10,19 @@
 | 点"删除"按钮后磁盘空间没释放 | 实际只是软删除（`deleted_at` 时间戳），文件全保留 |
 | 清理完会话后磁盘上残留一堆空目录 | slug 目录和工作空间目录不随会话删除自动清理 |
 | 共享机器上清理时误删了别人的数据 | 多账号共用 `~/.workbuddy/`，未按 `user_id` 过滤 |
+| 临时工作空间攒多了，想把相关的几个会话挪到新工作空间归类 | 没有会话级别的"挑选搬运"工具 |
 
 ## 包含
 
-- `migrate.py` —— 工作空间迁移，自动修复四层存储一致性
+- `migrate.py` —— 工作空间整体迁移，自动修复四层存储一致性
 - `purge.py` —— 物理清理（会话 / 工作空间 / 孤儿目录），带多账号安全过滤
+- `organize.py` —— 会话级挑选迁移（事后聚类，从临时空间整理到专题空间）
 - `SKILL.md` —— 完整存储架构文档 + 使用说明
 
 ## 快速开始
 
 ```bash
-# 迁移工作空间
+# 迁移整个工作空间
 python scripts/migrate.py "C:\old\path" "D:\new\path" --dry-run
 python scripts/migrate.py "C:\old\path" "D:\new\path"
 
@@ -30,6 +32,11 @@ python scripts/purge.py --all
 
 # 清理孤儿目录
 python scripts/purge.py --clean-orphans
+
+# 从临时工作空间挑几个会话挪到新工作空间
+python scripts/organize.py "D:\work\临时"                      # 先列表看编号
+python scripts/organize.py "D:\work\临时" --pick 0,2,5 --to "D:\work\infra" --dry-run
+python scripts/organize.py "D:\work\临时" --pick 0,2,5 --to "D:\work\infra"
 ```
 
 完整文档见 [SKILL.md](./SKILL.md)。

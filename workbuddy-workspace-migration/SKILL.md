@@ -23,6 +23,7 @@ from the UI. This skill documents the complete storage architecture and the step
 - Want to understand how WorkBuddy stores session data locally
 - Need to recover "deleted" (archived) sessions
 - Need to physically purge soft-deleted sessions or stale workspaces to free disk space
+- Want to pick specific sessions out of a "temp dump" workspace and group them into dedicated workspaces (post-hoc clustering)
 
 ## Data Storage Architecture
 
@@ -272,6 +273,60 @@ Restart WorkBuddy to ensure the UI reflects the changes.
 - **Default**: human-readable table with size totals
 - **`--json`**: machine-readable JSON array (for programmatic use)
 - **`--dry-run`**: preview mode, no files touched
+
+## Session Organization (Post-Hoc Clustering)
+
+A common real-world workflow: you dump everything into a single "temp" workspace as you go,
+and only later realize that some sessions are related and deserve their own dedicated workspace.
+
+Use `organize.py` to pick specific sessions out of a source workspace and move them to a
+target workspace (new or existing), without touching the rest.
+
+**List sessions in a workspace**:
+
+```bash
+python3 ~/.workbuddy/skills/workbuddy-workspace-migration/scripts/organize.py "D:\\work\\temp"
+```
+
+Output:
+```
+  #  Updated       Size  Title
+[0]  06-25 17:14   30KB  是不是太能弄
+[1]  06-25 05:26   874KB 中金对这个AI Agent在企业应用中的发展很看好，但通过主要是要加从场景侧
+[2]  06-25 03:16   3MB   n8n 和dify，对比
+...
+
+To pick sessions:
+  organize.py "D:\work\temp" --pick 0,2,5 --to "D:\work\new" --dry-run
+```
+
+**Pick by index and move**:
+
+```bash
+# Preview first
+python3 organize.py "D:\\work\\temp" --pick 0,2,5 --to "D:\\work\\infra" --dry-run
+
+# Execute
+python3 organize.py "D:\\work\\temp" --pick 0,2,5 --to "D:\\work\\infra"
+```
+
+**Pick by ID prefix** (useful when you have IDs from somewhere else):
+
+```bash
+python3 organize.py "D:\\work\\temp" --pick-ids 794f328e 0b2cc7e2 --to "D:\\work\\infra"
+```
+
+**What happens under the hood** (same four-layer handling as migrate.py, but per session):
+
+1. JSONL file moved from `projects/{src_slug}/` to `projects/{dst_slug}/`
+2. `cwd` field inside JSONL records updated (case-insensitive match)
+3. `workbuddy.db` sessions row: `cwd` updated, `deleted_at` cleared, `is_playground` set to 0
+4. `app/sessions.json` entry updated
+5. Target workspace auto-registered in `workspaces` table if missing
+6. `file-history/` and `artifact-index/` left in place (keyed by session ID, no path ref)
+
+After moving, if the source workspace is now empty, run `purge.py --clean-orphans`
+to remove the empty slug directory and stale workspace entry.
 
 ## Manual Migration Procedure (Fallback)
 
