@@ -36,5 +36,5 @@ python scripts/purge.py --clean-orphans
 
 ## 相关文章
 
-- 公众号版（通俗）：[《我把 AI 编程助手的数据目录扒了个底朝天》](#)
-- 技术博客版（深度）：[《WorkBuddy 本地存储架构剖析》](#)
+- 公众号版（通俗）：[《我把WorkBuddy的数据目录扒了个底朝天》](https://mp.weixin.qq.com/s/w7jeTNXqEqShMEHwQafO4w?mpshare=1&srcid=0625LqAYa1qoKkd98xv5W8V6&sharer_shareinfo=994918c7c88e9cab65710dc95766e5ed&sharer_shareinfo_first=994918c7c88e9cab65710dc95766e5ed&from=timeline&scene=2&subscene=2&sessionid=1782434751&clicktime=1782435012&enterid=1782435012&ascene=45&fasttmpl_type=0&fasttmpl_fullversion=8318234-zh_CN-zip&fasttmpl_flag=0&realreporttime=1782435012733&devicetype=android-36&version=28004a39&nettype=3gnet&abtest_cookie=AAACAA==&lang=zh_CN&countrycode=CN&exportkey=n_ChQIAhIQq3lTvf7ZbSfYKWDTacgetBL2AQIE97dBBAEAAAAAAHA/CH79YWcAAAAOpnltbLcz9gKNyK89dVj0PYJL/Sz1+s1tPOqJIAIlcndyQ01dbRNin2gBJUre07kPRWog+1qqonPK5l1JvJ4Nl53Q+Cfu53miT7pJQuQpr+MqSE7eskWKEzKZ62aJU2y4llRkIZVqsFsZ3a7WFVSCsrZt1qo4wfo5BPQwt3nWYrg33wlImzf0dddDu3c45h67VeUdaHTvjYVweMkuE9UZZ4S54ExohoiwPLPtsNd9tS0yHGy/uOk9gozV3WuvA6IV7oe5VSo8r+E/BFUs8yX+yk7EtMDUljBfN8K6uE0fqw==&pass_ticket=ThF101D5pGzxf2fPw4UdhDyLHoX3uMoZd4EksxYg9LqVLxsVudtBL6LyNyDYoeTh&wx_header=3&color_scheme=light)
+- 技术博客版（深度）：[《WorkBuddy 本地存储架构剖析》](https://blog.803027.xyz/archives/workbuddy-ben-di-cun-chu-jia-gou-pou-xi-si-ceng-lian-dong-xia-de-hui-hua-ke-jian-xing-kong-zhi-yu-qian-yi-shi-jian)

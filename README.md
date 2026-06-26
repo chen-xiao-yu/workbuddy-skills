@@ -31,7 +31,7 @@ WorkBuddy 的本地数据由四层联动存储组成（JSONL 会话内容、SQLi
 
 ```bash
 # 只下载某一个 skill（以 workbuddy-workspace-migration 为例）
-git clone --depth 1 https://github.com/<your-name>/workbuddy-skills.git
+git clone --depth 1 https://github.com/chen-xiao-yu/workbuddy-skills.git
 cd workbuddy-skills/workbuddy-workspace-migration
 ```
 
